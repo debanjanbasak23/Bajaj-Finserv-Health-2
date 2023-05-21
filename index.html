@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Data</title>
+  <style>
+    .employee-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #e9a8a8;
+      border-radius: 40px;
+      height: 60%;
+      width: 60%;
+      align-items: center;
+      align-content: center;
+    }
+
+    .employee-name {
+      font-weight: bold;
+    }
+
+    .employee-designation {
+      margin-top: 5px;
+      color: #d825a2;
+    }
+
+    .employee-skills {
+      margin-top: 5px;
+      color: #e62881;
+    }
+
+    .employee-projects {
+      margin-top: 10px;
+    }
+
+    .project-name {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .project-description {
+      margin-top: 5px;
+      color: #4b1e1e;
+    }
+
+    .project-team {
+      margin-top: 5px;
+      color: #341e1e;
+    }
+
+    .task-list {
+      margin-top: 10px;
+    }
+
+    .task-item {
+      margin-top: 5px;
+    }
+
+    .btn {
+      padding-left: 100px;
+      align-content: center;
+    }
+    .filter-checkbox {
+      size: 100px;
+      padding-right: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <input type="text" id="search-input" placeholder="Search by name">
+    <button id="search-button" class="btn">Search</button>
+  </div>
+  <br>
+  <div>
+    <label >Filter by Designation:</label><br>
+    <label><input type="checkbox" class="filter-checkbox" value="Developer">Developer</label>
+    <label><input type="checkbox" class="filter-checkbox" value="Designer">Designer</label>
+    <label><input type="checkbox" class="filter-checkbox" value="Tester">Tester</label>
+  </div>
+  <br>
+  <div id="skills-filter">
+    <label for="skills-checkboxes">Filter by Skills:</label><br>
+    <input type="checkbox" name="skills" value="JavaScript"> JavaScript
+    <input type="checkbox" name="skills" value="HTML"> HTML
+    <input type="checkbox" name="skills" value="CSS"> CSS
+    <input type="checkbox" name="skills" value="Photoshop">Photoshop
+    <input type="checkbox" name="skills" value="Sketch">Sketch
+    <input type="checkbox" name="skills" value="Manual Testing">Manual Testing<br>
+    <br>
+    <button onclick="filterDevelopers()">Apply Filter</button>
+  </div>
+  <br>
+  <div id="employee-container"></div>
+
+
+  <H2> Table showcases all the projects along with their respective team sizes and the number of completed tasks </H2> <br>
+  <table id="project-table" border="yes" size="100px">
+    <tr>
+      <th>Project Name</th>
+      <th>Team Size</th>
+      <th>Completed Tasks</th>
+    </tr>
+  </table>
+
+  <script>
+    var jsonData = {
+      "employees": [
+        {
+          "id": 1,
+          "name": "Mr. A",
+          "designation": "Developer",
+          "skills": [
+            "JavaScript",
+            "HTML",
+            "CSS"
+          ],
+          "projects": [
+            {
+              "name": "Project A",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Alice",
+                  "role": "Developer"
+                },
+                {
+                  "name": "Bob",
+                  "role": "Developer"
+                },
+                {
+                  "name": "Carol",
+                  "role": "Designer"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 2,
+                  "name": "Task 2",
+                  "status": "Completed"
+                },
+                {
+                  "id": 3,
+                  "name": "Task 3",
+                  "status": "Completed"
+                },
+                {
+                  "id": 4,
+                  "name": "Task 4",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 5,
+                  "name": "Task 5",
+                  "status": "Completed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Mr. B",
+          "designation": "Designer",
+          "skills": [
+            "Photoshop",
+            "Illustrator",
+            "Sketch"
+          ],
+          "projects": [
+            {
+              "name": "Project C",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Charlie",
+                  "role": "Designer"
+                },
+                {
+                  "name": "Dave",
+                  "role": "Developer"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 6,
+                  "name": "Task 6",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 7,
+                  "name": "Task 7",
+                  "status": "Completed"
+                }
+              ]
+            },
+            {
+              "name": "Project D",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Eve",
+                  "role": "Designer"
+                },
+                {
+                  "name": "Frank",
+                  "role": "Designer"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 8,
+                  "name": "Task 8",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 9,
+                  "name": "Task 9",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 10,
+                  "name": "Task 10",
+                  "status": "Completed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Mr. C",
+          "designation": "Tester",
+          "skills": [
+            "Manual Testing",
+            "Automated Testing"
+          ],
+          "projects": [
+            {
+              "name": "Project E",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Grace",
+                  "role": "Tester"
+                },
+                {
+                  "name": "Harry",
+                  "role": "Developer"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 11,
+                  "name": "Task 11",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 12,
+                  "name": "Task 12",
+                  "status": "Completed"
+                },
+                {
+                  "id": 13,
+                  "name": "Task 13",
+                  "status": "Completed"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    function generateEmployeeCards(employees) {
+      var employeeContainer = document.getElementById('employee-container');
+      employeeContainer.innerHTML = '';
+
+      employees.forEach(function (employee) {
+        var employeeCard = document.createElement('div');
+        employeeCard.className = 'employee-card';
+
+        var employeeName = document.createElement('div');
+        employeeName.className = 'employee-name';
+        employeeName.textContent = 'Name: ' + employee.name;
+
+        var employeeDesignation = document.createElement('div');
+        employeeDesignation.className = 'employee-designation';
+        employeeDesignation.textContent = 'Designation: ' + employee.designation;
+
+        var employeeSkills = document.createElement('div');
+        employeeSkills.className = 'employee-skills';
+        employeeSkills.textContent = 'Skills: ' + employee.skills.join(', ');
+
+        var employeeProjects = document.createElement('div');
+        employeeProjects.className = 'employee-projects';
+
+        employee.projects.forEach(function (project) {
+          var projectName = document.createElement('div');
+          projectName.className = 'project-name';
+          projectName.textContent = 'Project: ' + project.name;
+
+          var projectDescription = document.createElement('div');
+          projectDescription.className = 'project-description';
+          projectDescription.textContent = 'Description: ' + project.description;
+
+          var projectTeam = document.createElement('div');
+          projectTeam.className = 'project-team';
+          projectTeam.textContent = 'Team: ' + project.team.map(function (teamMember) {
+            return teamMember.name + ' (' + teamMember.role + ')';
+          }).join(', ');
+
+          var taskList = document.createElement('ul');
+          taskList.className = 'task-list';
+
+          project.tasks.forEach(function (task) {
+            var taskItem = document.createElement('li');
+            taskItem.className = 'task-item';
+            taskItem.textContent = 'Task: ' + task.name + ' (' + task.status + ')';
+            taskList.appendChild(taskItem);
+          });
+
+          employeeProjects.appendChild(projectName);
+          employeeProjects.appendChild(projectDescription);
+          employeeProjects.appendChild(projectTeam);
+          employeeProjects.appendChild(taskList);
+        });
+
+        employeeCard.appendChild(employeeName);
+        employeeCard.appendChild(employeeDesignation);
+        employeeCard.appendChild(employeeSkills);
+        employeeCard.appendChild(employeeProjects);
+
+        employeeContainer.appendChild(employeeCard);
+      });
+    }
+
+    function filterEmployees() {
+      var searchInput = document.getElementById('search-input');
+      var searchKeyword = searchInput.value.toLowerCase();
+
+      var filterCheckboxes = document.getElementsByClassName('filter-checkbox');
+      var selectedFilters = [];
+
+      for (var i = 0; i < filterCheckboxes.length; i++) {
+        if (filterCheckboxes[i].checked) {
+          selectedFilters.push(filterCheckboxes[i].value);
+        }
+      }
+
+      var filteredEmployees = jsonData.employees.filter(function (employee) {
+        var nameMatch = employee.name.toLowerCase().includes(searchKeyword);
+        var designationMatch = selectedFilters.includes(employee.designation);
+
+        return nameMatch && (selectedFilters.length === 0 || designationMatch);
+      });
+
+      generateEmployeeCards(filteredEmployees);
+    }
+
+    var searchButton = document.getElementById('search-button');
+    searchButton.addEventListener('click', filterEmployees);
+
+    var searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('keyup', function (event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        filterEmployees();
+      }
+    });
+
+    generateEmployeeCards(jsonData.employees);
+
+    function filterDevelopers(filteredEmployees) {
+      var selectedSkills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(function (checkbox) {
+        return checkbox.value;
+      });
+
+      if (!filteredEmployees) {
+        filteredEmployees = jsonData.employees;
+      }
+
+      var filteredDevelopers;
+      if (selectedSkills.length > 0) {
+        filteredDevelopers = filteredEmployees.filter(function (employee) {
+          return selectedSkills.some(function (skill) {
+            return employee.skills.includes(skill);
+          });
+        });
+      } else {
+        filteredDevelopers = filteredEmployees;
+      }
+
+      generateEmployeeCards(filteredDevelopers);
+    }
+
+    
+    function generateProjectTable() {
+      var table = document.getElementById('project-table');
+
+      jsonData.employees.forEach(function (employee) {
+        employee.projects.forEach(function (project) {
+          var teamSize = project.team.length;
+          var completedTasks = project.tasks.filter(function (task) {
+            return task.status === "Completed";
+          }).length;
+
+          var row = table.insertRow();
+
+          var projectNameCell = row.insertCell();
+          projectNameCell.textContent = project.name;
+
+          var teamSizeCell = row.insertCell();
+          teamSizeCell.textContent = teamSize;
+
+          var completedTasksCell = row.insertCell();
+          completedTasksCell.textContent = completedTasks;
+        });
+      });
+    }
+
+    // Generate the project table
+    generateProjectTable();
+  </script>
+</body>
+</html>
